@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://scenes/LobbyMenu/LobbyMenuScript.gd" type="Script" id=1]
 [ext_resource path="res://scenes/LobbyMenu/InsideLobbyMenuScript.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://scenes/BaseUiComponents/LineEdit/LineEdit.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/BaseUiComponents/H1/H1.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/LobbyMenu/RoomCodeFont.tres" type="DynamicFont" id=9]
+[ext_resource path="res://assets/icons/logo.png" type="Texture" id=10]
 [ext_resource path="res://scenes/LobbyMenu/ConnectionList.tscn" type="PackedScene" id=11]
 
 [sub_resource type="DynamicFont" id=1]
@@ -213,6 +214,7 @@ rect_pivot_offset = Vector2( 123.273, 29.3542 )
 text = "Leave"
 
 [node name="Title" parent="Wrapper" instance=ExtResource( 8 )]
+visible = false
 material = SubResource( 2 )
 anchor_left = 0.5
 anchor_right = 0.5
@@ -239,10 +241,22 @@ custom_colors/font_color = Color( 0.937255, 0.278431, 0.435294, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 align = 0
 
+[node name="Logo" type="TextureRect" parent="Wrapper"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -290.0
+margin_top = 100.0
+margin_right = 294.002
+margin_bottom = 185.0
+texture = ExtResource( 10 )
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 4 )
+
+[node name="Tween" type="Tween" parent="."]
 
 [connection signal="pressed" from="Wrapper/MainMenu/Connect" to="." method="_on_Create_pressed"]
 [connection signal="pressed" from="Wrapper/Error/ButtonBackError" to="." method="_on_ButtonBackError_pressed"]
 [connection signal="pressed" from="Wrapper/InsideLobbyMenu/StartButton" to="." method="_on_StartButton_pressed"]
 [connection signal="pressed" from="Wrapper/InsideLobbyMenu/LeaveButton" to="." method="_on_LeaveButton_pressed"]
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
