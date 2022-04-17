@@ -28,7 +28,7 @@ jobs:
       - name: Get Commit Date
         run: |
           /usr/bin/git show -s --format=%ci
-          /usr/bin/git show -s --format=%ci > version
+          /usr/bin/git show -s --format=%ci > version.txt
 
       - name: Move HTML5 templates into position
         run: |
