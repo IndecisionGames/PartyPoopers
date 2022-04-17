@@ -4,17 +4,11 @@ extends Node
 export var websocket_url = "ws://localhost:8080"
 
 onready var connections_list = $Control/InsideLobbyMenu/Lists/ConnectionLists/PlayerList
-onready var logo = find_node("Logo")
-onready var tween = find_node("Tween")
 onready var version_text = find_node("FooterCredits")
 onready var version_file = "res://version.txt"
 
-var tween_values = []
-
 func _ready():
 
-	tween_values = [logo.rect_position.y, logo.rect_position.y + 40]
-	_start_tween()
 
 	UserManager.connect("username_changed", self, "on_username_changed")
 	LobbyManager.connect("room_joined", self, "on_room_joined")
@@ -28,11 +22,6 @@ func _ready():
 
 	_set_version()
 	WsManager.connect_to_ws(websocket_url)
-
-func _start_tween():
-	tween.interpolate_property(logo, "rect_position:y", tween_values[0], tween_values[1], 2, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
-	tween.start()
-
 
 func _on_Create_pressed():
 	LobbyManager.create_room()
@@ -160,8 +149,3 @@ func _on_LeaveButton_pressed():
 
 func _on_StartButton_pressed():
 	LobbyManager.start_game()
-
-
-func _on_Tween_tween_completed(object, key):
-	tween_values.invert()
-	_start_tween()

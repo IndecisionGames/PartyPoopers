@@ -253,10 +253,7 @@ texture = ExtResource( 10 )
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 4 )
 
-[node name="Tween" type="Tween" parent="."]
-
 [connection signal="pressed" from="Wrapper/MainMenu/Connect" to="." method="_on_Create_pressed"]
 [connection signal="pressed" from="Wrapper/Error/ButtonBackError" to="." method="_on_ButtonBackError_pressed"]
 [connection signal="pressed" from="Wrapper/InsideLobbyMenu/StartButton" to="." method="_on_StartButton_pressed"]
 [connection signal="pressed" from="Wrapper/InsideLobbyMenu/LeaveButton" to="." method="_on_LeaveButton_pressed"]
-[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
