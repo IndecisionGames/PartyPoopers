@@ -1,7 +1,7 @@
 extends Node
 
 # change this with the address and port of your server
-export var websocket_url = "ws://localhost:3001"
+export var websocket_url = "ws://localhost:8080"
 
 onready var connections_list = $Control/InsideLobbyMenu/Lists/ConnectionLists/PlayerList
 
