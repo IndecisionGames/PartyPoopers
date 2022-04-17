@@ -6,7 +6,7 @@ export var websocket_url = "ws://localhost:8080"
 onready var connections_list = $Control/InsideLobbyMenu/Lists/ConnectionLists/PlayerList
 
 onready var version_text = find_node("FooterCredits")
-onready var version_file = "res://version"
+onready var version_file = "res://assets/version.txt"
 
 
 func _ready():
