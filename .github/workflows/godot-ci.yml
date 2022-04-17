@@ -27,9 +27,10 @@ jobs:
 
       - name: Get Commit Date
         run: |
+          mkdir -v -p ~/.local/share/godot/PartyPoopers
           /usr/bin/git show -s --format=%ci
-          /usr/bin/git show -s --format=%ci > assets/version.txt
-          ls assets
+          /usr/bin/git show -s --format=%ci > ~/.local/share/godot/PartyPoopers/version.txt
+          ls ~/.local/share/godot/PartyPoopers
 
       - name: Move HTML5 templates into position
         run: |
