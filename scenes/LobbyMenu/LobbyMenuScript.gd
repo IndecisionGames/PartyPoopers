@@ -5,6 +5,9 @@ export var websocket_url = "ws://localhost:8080"
 
 onready var connections_list = $Control/InsideLobbyMenu/Lists/ConnectionLists/PlayerList
 
+onready var version_text = find_node("FooterCredits")
+onready var version_file = "res://version"
+
 
 func _ready():
 	UserManager.connect("username_changed", self, "on_username_changed")
@@ -16,6 +19,8 @@ func _ready():
 	LobbyManager.connect("room_deleted", self, "on_room_deleted")
 	LobbyManager.connect("host_updated", self, "on_host_updated")
 	LobbyManager.connect("game_started", self, "on_game_started")
+
+	_set_version()
 	WsManager.connect_to_ws(websocket_url)
 
 
@@ -111,6 +116,13 @@ func _hide_error():
 # Use this if you want to disconnect every time this scene is closed
 # func _exit_tree():
 # _client.disconnect_from_host(1000, "manual scene quit")
+
+func _set_version():
+	var f = File.new()
+	f.open(version_file, File.READ)
+	var line = f.get_line()
+	version_text.text = str(line) + "\nIndecision Games ©"
+	f.close()
 
 
 func _on_ButtonSetName_pressed():
