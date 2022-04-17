@@ -40,6 +40,8 @@ theme/use_hidpi=true
 
 [rendering]
 
+quality/intended_usage/framebuffer_allocation.mobile=2
 vram_compression/import_etc=true
-environment/default_clear_color=Color( 0.027451, 0.231373, 0.298039, 1 )
+environment/default_clear_color=Color( 0.0105, 0.0289333, 0.05, 1 )
+quality/depth/hdr.mobile=true
 environment/default_environment="res://default_env.tres"

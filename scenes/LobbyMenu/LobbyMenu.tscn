@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/LobbyMenu/LobbyMenuScript.gd" type="Script" id=1]
 [ext_resource path="res://scenes/LobbyMenu/InsideLobbyMenuScript.gd" type="Script" id=2]
@@ -16,6 +16,22 @@ size = 32
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 3 )
+
+[sub_resource type="CanvasItemMaterial" id=2]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id=5]
+blend_mode = 1
+
+[sub_resource type="Environment" id=4]
+background_mode = 4
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 1.0
+glow_strength = 0.75
+glow_bloom = 0.15
+glow_blend_mode = 0
+glow_bicubic_upscale = true
 
 [node name="LobbyMenu" type="Node"]
 script = ExtResource( 1 )
@@ -38,36 +54,30 @@ margin_bottom = 278.0
 custom_constants/separation = 40
 alignment = 1
 
-[node name="Username" parent="Wrapper/MainMenu" instance=ExtResource( 5 )]
-margin_top = 121.0
-margin_right = 700.0
-margin_bottom = 177.0
-text = "Waiting for connection..."
-align = 1
-
 [node name="ChooseName" type="HBoxContainer" parent="Wrapper/MainMenu"]
 margin_left = 90.0
-margin_top = 217.0
+margin_top = 169.0
 margin_right = 610.0
-margin_bottom = 262.0
+margin_bottom = 214.0
 size_flags_horizontal = 4
 custom_constants/separation = 20
 
-[node name="LineEdit" parent="Wrapper/MainMenu/ChooseName" instance=ExtResource( 7 )]
+[node name="Name" parent="Wrapper/MainMenu/ChooseName" instance=ExtResource( 7 )]
 margin_top = 0.0
 margin_right = 520.0
 margin_bottom = 45.0
 align = 1
 max_length = 10
-placeholder_text = "new name"
+placeholder_text = "Enter name"
 
-[node name="Create" parent="Wrapper/MainMenu" instance=ExtResource( 6 )]
-margin_left = 220.0
-margin_top = 302.0
-margin_right = 480.0
-margin_bottom = 352.0
+[node name="Connect" parent="Wrapper/MainMenu" instance=ExtResource( 6 )]
+self_modulate = Color( 0.0666667, 0.541176, 0.698039, 1 )
+margin_left = 260.0
+margin_top = 254.0
+margin_right = 440.0
+margin_bottom = 304.0
 size_flags_horizontal = 4
-text = "Create room"
+text = "Connect"
 
 [node name="Loading" type="HBoxContainer" parent="Wrapper"]
 visible = false
@@ -87,6 +97,7 @@ __meta__ = {
 [node name="Label" parent="Wrapper/Loading" instance=ExtResource( 5 )]
 margin_right = 280.0
 margin_bottom = 56.0
+custom_colors/font_color = Color( 0.0235294, 0.839216, 0.627451, 1 )
 
 [node name="Error" type="VBoxContainer" parent="Wrapper"]
 visible = false
@@ -139,7 +150,7 @@ __meta__ = {
 }
 
 [node name="Label" parent="Wrapper/InsideLobbyMenu/InviteCode" instance=ExtResource( 5 )]
-margin_right = 520.0
+margin_right = 1000.0
 margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
 text = "Room code:"
@@ -147,7 +158,7 @@ align = 1
 
 [node name="LineEdit" parent="Wrapper/InsideLobbyMenu/InviteCode" instance=ExtResource( 7 )]
 margin_top = 48.0
-margin_right = 520.0
+margin_right = 1000.0
 margin_bottom = 135.0
 custom_colors/font_color_uneditable = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 9 )
@@ -174,6 +185,7 @@ __meta__ = {
 }
 
 [node name="PlayerList" parent="Wrapper/InsideLobbyMenu/Lists/ConnectionLists" instance=ExtResource( 11 )]
+margin_bottom = 64.0
 title = "Players: "
 
 [node name="StartButton" parent="Wrapper/InsideLobbyMenu" instance=ExtResource( 6 )]
@@ -201,16 +213,21 @@ margin_bottom = 210.0
 rect_pivot_offset = Vector2( 123.273, 29.3542 )
 text = "Leave"
 
-[node name="H1" parent="Wrapper" instance=ExtResource( 8 )]
+[node name="Title" parent="Wrapper" instance=ExtResource( 8 )]
+material = SubResource( 2 )
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -217.0
 margin_top = 50.0
 margin_right = 217.0
+custom_colors/font_color = Color( 0.0666667, 0.541176, 0.698039, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 text = "Party
 Poopers"
 
 [node name="FooterCredits" parent="Wrapper" instance=ExtResource( 4 )]
+self_modulate = Color( 1, 0.568627, 0.643137, 1 )
+material = SubResource( 5 )
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_left = 40.0
@@ -223,7 +240,10 @@ custom_colors/font_color = Color( 0.937255, 0.278431, 0.435294, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 align = 0
 
-[connection signal="pressed" from="Wrapper/MainMenu/Create" to="." method="_on_Create_pressed"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 4 )
+
+[connection signal="pressed" from="Wrapper/MainMenu/Connect" to="." method="_on_Create_pressed"]
 [connection signal="pressed" from="Wrapper/Error/ButtonBackError" to="." method="_on_ButtonBackError_pressed"]
 [connection signal="pressed" from="Wrapper/InsideLobbyMenu/StartButton" to="." method="_on_StartButton_pressed"]
 [connection signal="pressed" from="Wrapper/InsideLobbyMenu/LeaveButton" to="." method="_on_LeaveButton_pressed"]
