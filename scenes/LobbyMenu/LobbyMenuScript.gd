@@ -121,7 +121,6 @@ func _set_version():
 	var f = File.new()
 	f.open(version_file, File.READ)
 	var line = f.get_line()
-	print("Line is " + line)
 	if len(str(line)) == 0:
 		line = "Development"
 	version_text.text = str(line) + "\nIndecision Games ©"
