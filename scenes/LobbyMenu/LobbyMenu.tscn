@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/LobbyMenu/LobbyMenuScript.gd" type="Script" id=1]
 [ext_resource path="res://scenes/LobbyMenu/InsideLobbyMenuScript.gd" type="Script" id=2]
@@ -9,7 +9,6 @@
 [ext_resource path="res://scenes/BaseUiComponents/LineEdit/LineEdit.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/BaseUiComponents/H1/H1.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/LobbyMenu/RoomCodeFont.tres" type="DynamicFont" id=9]
-[ext_resource path="res://scenes/LobbyMenu/Wrapper.gd" type="Script" id=10]
 [ext_resource path="res://scenes/LobbyMenu/ConnectionList.tscn" type="PackedScene" id=11]
 
 [sub_resource type="DynamicFont" id=1]
@@ -26,7 +25,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource( 10 )
 
 [node name="MainMenu" type="VBoxContainer" parent="Wrapper"]
 anchor_left = 0.5
@@ -41,73 +39,33 @@ custom_constants/separation = 40
 alignment = 1
 
 [node name="Username" parent="Wrapper/MainMenu" instance=ExtResource( 5 )]
-margin_top = 11.0
+margin_top = 121.0
 margin_right = 700.0
-margin_bottom = 67.0
+margin_bottom = 177.0
 text = "Waiting for connection..."
 align = 1
 
 [node name="ChooseName" type="HBoxContainer" parent="Wrapper/MainMenu"]
-margin_left = 70.0
-margin_top = 107.0
-margin_right = 630.0
-margin_bottom = 157.0
+margin_left = 90.0
+margin_top = 217.0
+margin_right = 610.0
+margin_bottom = 262.0
 size_flags_horizontal = 4
 custom_constants/separation = 20
 
 [node name="LineEdit" parent="Wrapper/MainMenu/ChooseName" instance=ExtResource( 7 )]
 margin_top = 0.0
-margin_right = 280.0
-margin_bottom = 50.0
+margin_right = 520.0
+margin_bottom = 45.0
 align = 1
 max_length = 10
 placeholder_text = "new name"
 
-[node name="ButtonSetName" parent="Wrapper/MainMenu/ChooseName" instance=ExtResource( 6 )]
-margin_left = 300.0
-margin_right = 560.0
-margin_bottom = 50.0
-rect_pivot_offset = Vector2( 168.5, 28 )
-text = "Change name"
-
-[node name="Separator2" parent="Wrapper/MainMenu" instance=ExtResource( 4 )]
-margin_top = 197.0
-margin_right = 700.0
-margin_bottom = 220.0
-text = "- - -"
-
-[node name="Join" type="HBoxContainer" parent="Wrapper/MainMenu"]
-margin_top = 260.0
-margin_right = 700.0
-margin_bottom = 310.0
-size_flags_horizontal = 5
-custom_constants/separation = 20
-alignment = 1
-
-[node name="LineEdit" parent="Wrapper/MainMenu/Join" instance=ExtResource( 7 )]
-margin_left = 140.0
-margin_top = 0.0
-margin_right = 420.0
-margin_bottom = 50.0
-align = 1
-
-[node name="ButtonJoin" parent="Wrapper/MainMenu/Join" instance=ExtResource( 6 )]
-margin_left = 440.0
-margin_right = 560.0
-margin_bottom = 50.0
-text = "Join"
-
-[node name="Separator" parent="Wrapper/MainMenu" instance=ExtResource( 4 )]
-margin_top = 350.0
-margin_right = 700.0
-margin_bottom = 373.0
-text = "- - -"
-
 [node name="Create" parent="Wrapper/MainMenu" instance=ExtResource( 6 )]
 margin_left = 220.0
-margin_top = 413.0
+margin_top = 302.0
 margin_right = 480.0
-margin_bottom = 463.0
+margin_bottom = 352.0
 size_flags_horizontal = 4
 text = "Create room"
 
@@ -209,7 +167,7 @@ __meta__ = {
 
 [node name="ConnectionLists" type="VBoxContainer" parent="Wrapper/InsideLobbyMenu/Lists"]
 margin_right = 252.0
-margin_bottom = 60.0
+margin_bottom = 64.0
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
@@ -255,18 +213,16 @@ Poopers"
 [node name="FooterCredits" parent="Wrapper" instance=ExtResource( 4 )]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 15.0
-margin_top = -64.0
-margin_right = 391.0
-margin_bottom = -15.0
+margin_left = 40.0
+margin_top = -79.0
+margin_right = 376.0
+margin_bottom = -30.0
 grow_vertical = 0
 rect_min_size = Vector2( 376, 49 )
 custom_colors/font_color = Color( 0.937255, 0.278431, 0.435294, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 align = 0
 
-[connection signal="pressed" from="Wrapper/MainMenu/ChooseName/ButtonSetName" to="." method="_on_ButtonSetName_pressed"]
-[connection signal="pressed" from="Wrapper/MainMenu/Join/ButtonJoin" to="." method="_on_ButtonJoin_pressed"]
 [connection signal="pressed" from="Wrapper/MainMenu/Create" to="." method="_on_Create_pressed"]
 [connection signal="pressed" from="Wrapper/Error/ButtonBackError" to="." method="_on_ButtonBackError_pressed"]
 [connection signal="pressed" from="Wrapper/InsideLobbyMenu/StartButton" to="." method="_on_StartButton_pressed"]
