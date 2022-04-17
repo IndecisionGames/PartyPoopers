@@ -32,8 +32,11 @@ jobs:
       - name: Create staging directory
         run: mkdir -v -p build/web
 
+      - name: Show Commit Date
+        run: /usr/bin/git show -s --format=%ci
+
       - name: Get Commit Date
-        run: git show -s --format=%ci > version
+        run: /usr/bin/git show -s --format=%ci > version
 
       - name: Build
         run: godot -v --export "HTML5" build/web/index.html project.godot
