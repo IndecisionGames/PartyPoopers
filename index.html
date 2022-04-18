@@ -51,38 +51,22 @@
       visibility: hidden;
     }
 
-    #status-progressbar {
-      width: 200px;
-      background-color: #092530;
-      border-radius: 6px;
-      padding: 2px;
-      visibility: visible;
-    }
-
-    #status-progressbar-inner {
-      background-color: #41b6e5;
-      width: 2%;
-      height: 4px;
-      border-radius: 3px;
-      transition: width 0.5s ease-in-out;
-    }
-
     #status-spinner {
-      border: 3px solid #41b6e5;
-      border-top: 3px solid #092530;
+      border: 4px solid #092530;
+      border-top: 4px solid #41b6e5;
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      animation: spin 2s linear infinite;
+      width: 48px;
+      height: 48px;
+      animation: spin 1.2s cubic-bezier(0.42,0.1,0.59,0.9) infinite;
       visibility: visible;
     }
 
     @keyframes spin {
       0% {
-        transform: rotate(0deg);
+        transform: rotate(20deg);
       }
       100% {
-        transform: rotate(360deg);
+        transform: rotate(380deg);
       }
     }
 
@@ -103,12 +87,7 @@ $GODOT_HEAD_INCLUDE
 		Please try updating or use a different browser.
 	</canvas>
 	<div id='status'>
-    <!-- Indeterminate progress -->
-    <div id="status-spinner" style="display: none"></div>
-    <!-- Determinate progress -->
-    <div id="status-progressbar" style="display: block;">
-      <div id="status-progressbar-inner"></div>
-    </div>
+    <div id="status-spinner" style="display: block"></div>
 		<div id='status-notice' style='display: none;'></div>
 	</div>
 
@@ -119,25 +98,20 @@ $GODOT_HEAD_INCLUDE
 
 		(function() {
 			const INDETERMINATE_STATUS_STEP_MS = 100;
-			var statusProgress = document.getElementById('status-progressbar');
-			var statusProgressInner = document.getElementById('status-progressbar-inner');
-			var statusIndeterminate = document.getElementById('status-spinner');
+			var statusLoading = document.getElementById('status-spinner');
 			var statusNotice = document.getElementById('status-notice');
 
 			var initializing = true;
-			var statusMode = 'hidden';
+			var statusMode = 'loading';
 
 			function setStatusMode(mode) {
 				if (statusMode === mode || !initializing) return;
-				[statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
+				[statusLoading, statusNotice].forEach(elem => {
 					elem.style.display = 'none';
 				});
 				switch (mode) {
-					case 'progress':
-						statusProgress.style.display = 'block';
-						break;
-					case 'indeterminate':
-						statusIndeterminate.style.display = 'block';
+					case 'loading':
+            statusLoading.style.display = 'block';
 						break;
 					case 'notice':
 						statusNotice.style.display = 'block';
@@ -172,21 +146,20 @@ $GODOT_HEAD_INCLUDE
 			if (!Engine.isWebGLAvailable()) {
 				displayFailureNotice('WebGL not available');
 			} else {
-				setStatusMode('indeterminate');
+				setStatusMode('loading');
 				engine.startGame({
 					'onProgress': function (current, total) {
-						if (total > 0) {
-							statusProgressInner.style.width = current/total * 100 + '%';
-							setStatusMode('progress');
-							if (current === total) {
-								// wait for progress bar animation
-								setTimeout(() => {
-									setStatusMode('indeterminate');
-								}, 100);
-							}
-						} else {
-							setStatusMode('indeterminate');
-						}
+					// 	if (total > 0) {
+					// 		statusProgressInner.style.width = current/total * 100 + '%';
+					// 		setStatusMode('loading');
+					// 		if (current === total) {
+					// 			// wait for progress bar animation
+					// 			setTimeout(() => {
+					// 				setStatusMode('loading');
+					// 			}, 100);
+					// 		}
+					// 	} else {
+					// 		setStatusMode('loading');
 					},
 				}).then(() => {
 					setStatusMode('hidden');
