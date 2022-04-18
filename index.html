@@ -129,22 +129,10 @@ $GODOT_HEAD_INCLUDE
 			var initializing = true;
 			var statusMode = 'hidden';
 
-			var animationCallbacks = [];
-			function animate(time) {
-				animationCallbacks.forEach(callback => callback(time));
-				requestAnimationFrame(animate);
-			}
-			requestAnimationFrame(animate);
-
 			function setStatusMode(mode) {
-
-				if (statusMode === mode || !initializing)
-					return;
+				if (statusMode === mode || !initializing) return;
 				[statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
 					elem.style.display = 'none';
-				});
-				animationCallbacks = animationCallbacks.filter(function(value) {
-					return (value != animateStatusIndeterminate);
 				});
 				switch (mode) {
 					case 'progress':
@@ -152,7 +140,6 @@ $GODOT_HEAD_INCLUDE
 						break;
 					case 'indeterminate':
 						statusIndeterminate.style.display = 'block';
-						animationCallbacks.push(animateStatusIndeterminate);
 						break;
 					case 'notice':
 						statusNotice.style.display = 'block';
@@ -163,16 +150,6 @@ $GODOT_HEAD_INCLUDE
 						throw new Error('Invalid status mode');
 				}
 				statusMode = mode;
-			}
-
-			function animateStatusIndeterminate(ms) {
-				var i = Math.floor(ms / INDETERMINATE_STATUS_STEP_MS % 8);
-				if (statusIndeterminate.children[i].style.borderTopColor == '') {
-					Array.prototype.slice.call(statusIndeterminate.children).forEach(child => {
-						child.style.borderTopColor = '';
-					});
-					statusIndeterminate.children[i].style.borderTopColor = '#dfdfdf';
-				}
 			}
 
 			function setStatusNotice(text) {

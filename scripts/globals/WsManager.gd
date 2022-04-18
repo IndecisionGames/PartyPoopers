@@ -13,9 +13,7 @@ func connect_to_ws(url):
 	_client.connect("connection_established", self, "_connected")
 	_client.connect("data_received", self, "_on_data")
 
-	print("Connecting")
 	var err = _client.connect_to_url(url)
-	print(err)
 	if err != OK:
 		print("Unable to connect")
 		is_connected = false
