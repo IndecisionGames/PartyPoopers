@@ -63,7 +63,7 @@ func _on_data(data):
 
 func _handle_room_joined(data):
 	room = {
-		"id": data.get("roomId"), 
+		"id": data.get("roomId"),
 		"usersND": [],
 		"isStarted": false
 	}
@@ -80,15 +80,7 @@ func _handle_user_joined(data):
 
 
 func _handle_user_left(data):
-	var to_delete = get_userND_by_id(data.get("userId"))
-	if to_delete != null:
-		room.get("usersND").erase(to_delete)
-		if to_delete.get("id") == UserManager.selfId:
-			emit_signal("left_room")
-			room = null
-		else:
-			emit_signal("user_left", to_delete)
-			refresh_host()
+	pass
 
 
 func _handle_host_updated(data):

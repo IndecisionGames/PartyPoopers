@@ -1,116 +1,65 @@
 extends Node
 
-# change this with the address and port of your server
 export var websocket_url = "ws://localhost:8080"
 
-onready var connections_list = $Control/InsideLobbyMenu/Lists/ConnectionLists/PlayerList
 onready var version_text = find_node("FooterCredits")
 onready var version_file = "res://version.txt"
+onready var status = find_node("Status")
 
 func _ready():
-
-
-	UserManager.connect("username_changed", self, "on_username_changed")
 	LobbyManager.connect("room_joined", self, "on_room_joined")
-	LobbyManager.connect("user_joined", self, "on_user_joined")
-	LobbyManager.connect("user_left", self, "on_user_left")
-	LobbyManager.connect("left_room", self, "on_left_room")
-	LobbyManager.connect("failed_to_join_room", self, "on_failed_to_join_room")
-	LobbyManager.connect("room_deleted", self, "on_room_deleted")
 	LobbyManager.connect("host_updated", self, "on_host_updated")
 	LobbyManager.connect("game_started", self, "on_game_started")
+	WsManager.connect("status_change", self, "on_connection_status_change")
 
 	_set_version()
 	WsManager.connect_to_ws(websocket_url)
+
+func on_connection_status_change(status):
+	if status:
+		status.text = "Connected"
+		status.add_color_override("font_color", Color("#0cd29e"))
+		status.self_modulate = Color("#0cd29e")
+	else:
+		status.text = "Failed to connect"
+		status.add_color_override("font_color", Color("#ef476f"))
+		status.self_modulate = Color("#ef476f")
 
 func _on_Create_pressed():
 	LobbyManager.create_room()
 	_hide_main_menu()
 	_start_loading()
 
-
-func on_username_changed(username):
-	$Control/MainMenu/Username.text = "Connected as: " + username
-
-
 func on_room_joined(room):
 	_stop_loading()
 	_show_lobby()
 
-
-func on_failed_to_join_room(message, reason):
-	_stop_loading()
-	_show_error(message + ": " + reason)
-
-
-func on_user_joined(userND):
-	connections_list.add_connection(userND)
-
-
-func on_user_left(userND):
-	connections_list.remove_connection(userND)
-
-
-func on_left_room():
-	connections_list.reset()
-	_hide_lobby()
-	_show_main_menu()
-
-
-func on_room_deleted():
-	connections_list.reset()
-	_hide_lobby()
-	_show_error("The room you were in got deleted")
-
-
 func on_game_started():
-	$Control/InsideLobbyMenu/InviteCode/LineEdit.text = "Started!"
-
-
-func on_host_updated(userId):
-	if userId == UserManager.selfId:
-		$Control/InsideLobbyMenu/StartButton.show()
-	else:
-		$Control/InsideLobbyMenu/StartButton.hide()
-
+	pass
 
 func _show_main_menu():
-	$Control/H1.show()
+	$Control/Logo.show()
+	$Control/Status.show()
 	$Control/FooterCredits.show()
 	$Control/MainMenu.show()
 
-
 func _hide_main_menu():
-	$Control/H1.hide()
+	$Control/Logo.hide()
+	$Control/Status.hide()
 	$Control/FooterCredits.hide()
 	$Control/MainMenu.hide()
 
-
 func _show_lobby():
-	$Control/InsideLobbyMenu.show()
-	$Control/InsideLobbyMenu.update_code()
-
+	pass
 
 func _hide_lobby():
-	$Control/InsideLobbyMenu.hide()
-
+	pass
 
 func _start_loading():
 	$Control/Loading.show()
 
-
 func _stop_loading():
 	$Control/Loading.hide()
-
-
-func _show_error(message):
-	$Control/Error.show()
-	$Control/Error/ErrorMessage.text = message
-
-
-func _hide_error():
-	$Control/Error.hide()
-
 
 # Use this if you want to disconnect every time this scene is closed
 # func _exit_tree():
@@ -126,26 +75,3 @@ func _set_version():
 		line = "Last updated: " + line
 	version_text.text = "Indecision Games ©\n" + str(line)
 	f.close()
-
-
-func _on_ButtonSetName_pressed():
-	UserManager.change_name($Control/MainMenu/ChooseName/LineEdit.text)
-
-
-func _on_ButtonJoin_pressed():
-	LobbyManager.join_room($Control/MainMenu/Join/LineEdit.text)
-	_hide_main_menu()
-	_start_loading()
-
-
-func _on_ButtonBackError_pressed():
-	_hide_error()
-	_show_main_menu()
-
-
-func _on_LeaveButton_pressed():
-	LobbyManager.leave_room()
-
-
-func _on_StartButton_pressed():
-	LobbyManager.start_game()
