@@ -141,4 +141,4 @@ texture = ExtResource( 10 )
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 4 )
 
-[connection signal="pressed" from="Control/MainMenu/Connect" to="." method="_on_Create_pressed"]
+[connection signal="pressed" from="Control/MainMenu/Connect" to="." method="_on_Connect_pressed"]
