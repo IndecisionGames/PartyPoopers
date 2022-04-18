@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns='https://www.w3.org/1999/xhtml' lang='' xml:lang=''>
+<head>
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, user-scalable=no' />
+	<title>$GODOT_PROJECT_NAME</title>
+	<style type='text/css'>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+		body {
+      touch-action: none;
+      margin: 0;
+      padding: 0;
+      border: 0 none;
+      overflow: hidden;
+      text-align: center;
+      font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: #fff;
+      background-color: #03070d;
+		}
+
+		#canvas {
+			display: block;
+			margin: 0;
+			color: white;
+		}
+
+		#canvas:focus {
+			outline: none;
+		}
+
+
+		/* Status display
+		 * ============== */
+
+    #status {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+    }
+
+    #status-progressbar {
+      width: 400px;
+      background-color: #092530;
+      border-radius: 6px;
+      padding: 2px;
+      visibility: visible;
+    }
+
+    #status-progressbar-inner {
+      background-color: #41b6e5;
+      width: 2%;
+      height: 4px;
+      border-radius: 3px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    #status-spinner {
+      border: 3px solid #41b6e5;
+      border-top: 3px solid #092530;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 2s linear infinite;
+      visibility: visible;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+		#status-notice {
+			visibility: visible;
+			padding: 8px;
+			color: #ef476f;
+			background-color: #03070d;
+      font-weight: bold;
+      border-radius: 4px;
+		}
+	</style>
+$GODOT_HEAD_INCLUDE
+</head>
+<body>
+	<canvas id='canvas'>
+		HTML5 canvas appears to be unsupported in the current browser.<br />
+		Please try updating or use a different browser.
+	</canvas>
+	<div id='status'>
+    <!-- Indeterminate progress -->
+    <div id="status-spinner" style="display: none"></div>
+    <!-- Determinate progress -->
+    <div id="status-progressbar" style="display: block;">
+      <div id="status-progressbar-inner"></div>
+    </div>
+		</div>
+		<div id='status-notice' style='display: none;'></div>
+	</div>
+
+	<script type='text/javascript' src='$GODOT_URL'></script>
+	<script type='text/javascript'>//<![CDATA[
+
+		const GODOT_CONFIG = $GODOT_CONFIG;
+		var engine = new Engine(GODOT_CONFIG);
+
+		(function() {
+			const INDETERMINATE_STATUS_STEP_MS = 100;
+			var statusProgress = document.getElementById('status-progress');
+			var statusProgressInner = document.getElementById('status-progress-inner');
+			var statusIndeterminate = document.getElementById('status-indeterminate');
+			var statusNotice = document.getElementById('status-notice');
+
+			var initializing = true;
+			var statusMode = 'hidden';
+
+			var animationCallbacks = [];
+			function animate(time) {
+				animationCallbacks.forEach(callback => callback(time));
+				requestAnimationFrame(animate);
+			}
+			requestAnimationFrame(animate);
+
+			function setStatusMode(mode) {
+
+				if (statusMode === mode || !initializing)
+					return;
+				[statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
+					elem.style.display = 'none';
+				});
+				animationCallbacks = animationCallbacks.filter(function(value) {
+					return (value != animateStatusIndeterminate);
+				});
+				switch (mode) {
+					case 'progress':
+						statusProgress.style.display = 'block';
+						break;
+					case 'indeterminate':
+						statusIndeterminate.style.display = 'block';
+						animationCallbacks.push(animateStatusIndeterminate);
+						break;
+					case 'notice':
+						statusNotice.style.display = 'block';
+						break;
+					case 'hidden':
+						break;
+					default:
+						throw new Error('Invalid status mode');
+				}
+				statusMode = mode;
+			}
+
+			function animateStatusIndeterminate(ms) {
+				var i = Math.floor(ms / INDETERMINATE_STATUS_STEP_MS % 8);
+				if (statusIndeterminate.children[i].style.borderTopColor == '') {
+					Array.prototype.slice.call(statusIndeterminate.children).forEach(child => {
+						child.style.borderTopColor = '';
+					});
+					statusIndeterminate.children[i].style.borderTopColor = '#dfdfdf';
+				}
+			}
+
+			function setStatusNotice(text) {
+				while (statusNotice.lastChild) {
+					statusNotice.removeChild(statusNotice.lastChild);
+				}
+				var lines = text.split('\n');
+				lines.forEach((line) => {
+					statusNotice.appendChild(document.createTextNode(line));
+					statusNotice.appendChild(document.createElement('br'));
+				});
+			};
+
+			function displayFailureNotice(err) {
+				var msg = err.message || err;
+				console.error(msg);
+				setStatusNotice(msg);
+				setStatusMode('notice');
+				initializing = false;
+			};
+
+			if (!Engine.isWebGLAvailable()) {
+				displayFailureNotice('WebGL not available');
+			} else {
+				setStatusMode('indeterminate');
+				engine.startGame({
+					'onProgress': function (current, total) {
+						if (total > 0) {
+							statusProgressInner.style.width = current/total * 100 + '%';
+							setStatusMode('progress');
+							if (current === total) {
+								// wait for progress bar animation
+								setTimeout(() => {
+									setStatusMode('indeterminate');
+								}, 500);
+							}
+						} else {
+							setStatusMode('indeterminate');
+						}
+					},
+				}).then(() => {
+					setStatusMode('hidden');
+					initializing = false;
+				}, displayFailureNotice);
+			}
+		})();
+	//]]></script>
+</body>
+</html>
