@@ -1,10 +1,10 @@
 extends Node
 
-export var websocket_url = "ws://localhost:8080"
+export var websocket_url = "ws://127.0.0.1:8080"
 
 onready var version_text = find_node("FooterCredits")
 onready var version_file = "res://version.txt"
-onready var status = find_node("Status")
+onready var status_text = find_node("Status")
 
 func _ready():
 	LobbyManager.connect("room_joined", self, "on_room_joined")
@@ -17,13 +17,13 @@ func _ready():
 
 func on_connection_status_change(status):
 	if status:
-		status.text = "Connected"
-		status.add_color_override("font_color", Color("#0cd29e"))
-		status.self_modulate = Color("#0cd29e")
+		status_text.text = "Connected"
+		status_text.add_color_override("font_color", Color("#0cd29e"))
+		status_text.self_modulate = Color("#0cd29e")
 	else:
-		status.text = "Failed to connect"
-		status.add_color_override("font_color", Color("#ef476f"))
-		status.self_modulate = Color("#ef476f")
+		status_text.text = "Failed to connect"
+		status_text.add_color_override("font_color", Color("#ef476f"))
+		status_text.self_modulate = Color("#ef476f")
 
 func _on_Create_pressed():
 	LobbyManager.create_room()
